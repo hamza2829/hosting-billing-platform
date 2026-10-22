@@ -6,21 +6,27 @@ A simplified event driven hosting-company backend built with **Java 21 and Sprin
 
 ```text
 REST client + X-API-Key + X-Correlation-ID
-     |+     v
+     |
+     v
 billing-service (8081) ---> PostgreSQL billing schema
      |                        | invoice + outbox in one transaction
      +------ InvoiceCreated --+----> Kafka: billing.events
-                                     |+                                     v
+                                     |
+                                     v
                               payment-service (8082)
                                      | stable invoice idempotency key
                                      v
                               Mock payment API (8090)
-                                     |+                        PostgreSQL payments schema + outbox
-                                     |+                    PaymentReceived / PaymentFailed
-                                     |+                   +-----------------+-------------------+
+                                     |
+                        PostgreSQL payments schema + outbox
+                                     |
+                    PaymentReceived / PaymentFailed
+                                     |
+                   +-----------------+-------------------+
                    v                                     v
         billing-service invoice state         audit-search-service (8083)
-                   ^                                     |+                   |                               Elasticsearch
+                   ^                                     |
+                   |                               Elasticsearch
               Kafka events                     /search, /alerts,
                                              /invoices/{id}/audit
 
@@ -47,7 +53,7 @@ Requires Docker Compose v2 with Linux containers and Node.js 22 or newer for set
 git clone https://github.com/hamza2829/hosting-billing-platform.git
 cd hosting-billing-platform
 node tests/setup.mjs
-docker compose up -d --build --wait --wait-timeout 240
+BILLING_MONTHLY_CRON='*/5 * * * * *' docker compose up -d --build --wait --wait-timeout 240
 node tests/smoke.mjs
 ```
 

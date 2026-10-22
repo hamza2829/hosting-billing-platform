@@ -186,7 +186,7 @@ execFileSync(
     "--property",
     "parse.headers=true",
     "--property",
-    "headers.separator=~",
+    "headers.delimiter=~",
     "--property",
     "parse.key=true",
     "--property",
