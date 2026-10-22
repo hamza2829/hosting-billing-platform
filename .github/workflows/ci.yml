@@ -1,0 +1,29 @@
+name: CI
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      BILLING_MONTHLY_CRON: '*/5 * * * * *'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: '21', cache: maven}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: mvn -B -ntp verify
+      - run: node tests/setup.mjs
+      - run: docker compose up -d --build --wait --wait-timeout 240
+      - run: node tests/smoke.mjs
+      - name: Capture runtime evidence
+        if: always()
+        run: |
+          mkdir -p docs/runs
+          docker compose logs --no-color > docs/runs/compose.log
+          find . -path '*/surefire-reports/TEST-*.xml' -exec cp {} docs/runs/ \;
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: execution-evidence, path: docs/runs/}
+      - run: docker compose down -v
+        if: always()
