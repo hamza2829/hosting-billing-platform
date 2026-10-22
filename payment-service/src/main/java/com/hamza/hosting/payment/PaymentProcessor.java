@@ -29,11 +29,11 @@ public class PaymentProcessor {
         LoggerFactory.getLogger(getClass()).info("Payment processed invoiceId={} status={}",event.invoiceId(),payment.status);
     }
     @Transactional
-    public void exhausted(ConsumerRecord<String,String> record,Exception failure) {
+    public void exhausted(ConsumerRecord<?,?> record,Exception failure) {
         String correlation=Trace.from(record);
         try(var ignored=Trace.scope(correlation)) {
             BillingEvent event=null;
-            try {event=mapper.readValue(record.value(),BillingEvent.class);} catch(Exception invalid) { /* Preserve malformed payload in the dead letter envelope. */ }
+            try {event=mapper.readValue(String.valueOf(record.value()),BillingEvent.class);} catch(Exception invalid) { /* Preserve malformed payload in the dead letter envelope. */ }
             if(event!=null && event.type()==BillingEvent.Type.InvoiceCreated) {
                 var payment=payments.locked(event.invoiceId()).orElse(null);
                 if(payment==null)payment=payments.saveAndFlush(new Payment(event));

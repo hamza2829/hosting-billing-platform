@@ -12,8 +12,8 @@ jobs:
         with: {distribution: temurin, java-version: '21', cache: maven}
       - uses: actions/setup-node@v4
         with: {node-version: '22'}
-      - run: mvn -B -ntp verify
       - run: node tests/setup.mjs
+      - run: mvn -B -ntp verify
       - run: docker compose up -d --build --wait --wait-timeout 240
       - run: node tests/smoke.mjs
       - name: Capture runtime evidence
