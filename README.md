@@ -124,7 +124,23 @@ The `X-Correlation-ID` Kafka header is restored into SLF4J MDC for each consumer
 
 ## Verified results
 
-The local Java 21 reactor build and **28 JUnit tests** passed, including four embedded WireMock HTTP tests. Four Python tests for the mock provider also passed. Full Compose results will be added only from a completed run. CI retains Surefire XML, the smoke report and service logs as an execution artifact.
+The full stack passed on the GitHub Actions Linux runner in [verified run 39703226140](https://github.com/hamza2829/hosting-billing-platform/actions/runs/39703226140), source commit `09eb26f`. The Java 21 build and unit tests were also run locally. See [execution evidence](docs/runs/) for the actual smoke report, Surefire XML, per-suite counts and CI provenance. Complete service logs are retained in the linked run's execution artifact.
+
+| Check                                                    | Actual result                        |
+| -------------------------------------------------------- | ------------------------------------ |
+| Common contract, correlation and HTTP authentication     | 8 JUnit tests passed                 |
+| Billing domain behavior                                  | 7 JUnit tests passed                 |
+| Payment client against embedded WireMock                 | 4 JUnit tests passed                 |
+| Payment processing behavior                              | 5 JUnit tests passed                 |
+| Elasticsearch search query construction                  | 4 JUnit tests passed                 |
+| Java total                                               | **28 passed**, no failures or errors |
+| Provider HTTP transport and idempotency regression suite | **4 passed**                         |
+| Real Compose smoke assertions                            | **15 passed**                        |
+| Spotless, Java compilation and Docker builds             | Passed                               |
+
+The real smoke run covered invoice creation, concurrent monthly uniqueness, successful payment, Kafka replay without a second provider call, a charge stored before a failed response, a business decline, three failed HTTP attempts followed by a dead letter and alert, search filters and full text, billing reconciliation events, the actual scheduled job, Prometheus endpoints and correlated JSON logs from all three services.
+
+One successful invoice-to-PAID flow took **1645 ms**, including polling overhead. The two observed retry intervals were **505 ms and 611 ms**, with configured backoff delays of 300 ms and 600 ms plus processing and scheduling overhead. These are observations from a synthetic smoke run, not a load benchmark. The monthly timer was accelerated to every five seconds in CI, and repeated ticks produced one invoice for that subscription and period.
 
 ## Scope and limitations
 

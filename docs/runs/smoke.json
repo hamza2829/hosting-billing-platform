@@ -1,0 +1,31 @@
+{
+  "timestamp": "2026-10-22T01:04:31.783Z",
+  "passed": 15,
+  "checks": [
+    "three service health and OpenAPI endpoints",
+    "API key authentication",
+    "validation and global errors",
+    "invoice to Kafka to provider to paid invoice",
+    "concurrent monthly invoice uniqueness",
+    "Kafka headers preserve correlation into audit and provider",
+    "Kafka replay does not recharge or duplicate audit document",
+    "ambiguous provider response retried with one durable charge",
+    "business decline publishes PaymentFailed",
+    "three bounded attempts then DLT PaymentFailed and searchable alerts",
+    "Elasticsearch customer status date range and full text search",
+    "billing publishes payment notifications and projects reconciliation",
+    "actual accelerated monthly job and duplicate tick protection",
+    "Prometheus metrics exposed by all services",
+    "correlated structured JSON logs across all three services"
+  ],
+  "timings": [
+    {
+      "case": "successful-payment",
+      "milliseconds": 1645
+    },
+    {
+      "case": "retry-backoff",
+      "intervalsMs": [505, 611]
+    }
+  ]
+}

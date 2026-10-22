@@ -1,0 +1,148 @@
+{
+  "conclusion": "success",
+  "createdAt": "2026-10-22T01:01:27Z",
+  "headSha": "09eb26f9a8f06f15008c0aa122108ef6a25c832c",
+  "jobs": [
+    {
+      "completedAt": "2026-10-22T01:04:50Z",
+      "conclusion": "success",
+      "databaseId": 119577111247,
+      "name": "verify",
+      "startedAt": "2026-10-22T01:01:31Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-22T01:01:33Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-22T01:01:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T01:01:34Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "startedAt": "2026-10-22T01:01:33Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T01:01:34Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-java@v4",
+          "number": 3,
+          "startedAt": "2026-10-22T01:01:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T01:01:35Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-node@v4",
+          "number": 4,
+          "startedAt": "2026-10-22T01:01:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T01:01:35Z",
+          "conclusion": "success",
+          "name": "Run node tests/setup.mjs",
+          "number": 5,
+          "startedAt": "2026-10-22T01:01:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T01:02:07Z",
+          "conclusion": "success",
+          "name": "Run mvn -B -ntp spotless:check verify",
+          "number": 6,
+          "startedAt": "2026-10-22T01:01:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T01:02:07Z",
+          "conclusion": "success",
+          "name": "Run python3 -m unittest discover -s tests -p 'test_*.py' -v",
+          "number": 7,
+          "startedAt": "2026-10-22T01:02:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T01:04:08Z",
+          "conclusion": "success",
+          "name": "Run docker compose up -d --build --wait --wait-timeout 240",
+          "number": 8,
+          "startedAt": "2026-10-22T01:02:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T01:04:31Z",
+          "conclusion": "success",
+          "name": "Run node tests/smoke.mjs",
+          "number": 9,
+          "startedAt": "2026-10-22T01:04:08Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T01:04:31Z",
+          "conclusion": "success",
+          "name": "Capture runtime evidence",
+          "number": 10,
+          "startedAt": "2026-10-22T01:04:31Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T01:04:33Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 11,
+          "startedAt": "2026-10-22T01:04:31Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T01:04:43Z",
+          "conclusion": "success",
+          "name": "Run docker compose down -v",
+          "number": 12,
+          "startedAt": "2026-10-22T01:04:33Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T01:04:43Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@v4",
+          "number": 22,
+          "startedAt": "2026-10-22T01:04:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T01:04:47Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-java@v4",
+          "number": 23,
+          "startedAt": "2026-10-22T01:04:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T01:04:47Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 24,
+          "startedAt": "2026-10-22T01:04:47Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T01:04:47Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 25,
+          "startedAt": "2026-10-22T01:04:47Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/hamza2829/hosting-billing-platform/actions/runs/39703226140/job/119577111247"
+    }
+  ],
+  "updatedAt": "2026-10-22T01:04:50Z",
+  "url": "https://github.com/hamza2829/hosting-billing-platform/actions/runs/39703226140"
+}

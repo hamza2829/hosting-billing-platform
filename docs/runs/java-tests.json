@@ -1,0 +1,32 @@
+[
+  {
+    "suite": "com.hamza.hosting.audit.SearchQueryTest",
+    "tests": 4,
+    "failures": 0,
+    "errors": 0
+  },
+  {
+    "suite": "com.hamza.hosting.billing.BillingOperationsTest",
+    "tests": 7,
+    "failures": 0,
+    "errors": 0
+  },
+  {
+    "suite": "com.hamza.hosting.common.ContractTest",
+    "tests": 8,
+    "failures": 0,
+    "errors": 0
+  },
+  {
+    "suite": "com.hamza.hosting.payment.PaymentClientTest",
+    "tests": 4,
+    "failures": 0,
+    "errors": 0
+  },
+  {
+    "suite": "com.hamza.hosting.payment.PaymentProcessorTest",
+    "tests": 5,
+    "failures": 0,
+    "errors": 0
+  }
+]
