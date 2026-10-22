@@ -3,3 +3,4 @@
 docs/runs/local-*
 .idea/
 *.log
+.tools/

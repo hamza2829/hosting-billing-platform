@@ -26,7 +26,11 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
     healthcheck:
-      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list"]
+      test:
+        [
+          "CMD-SHELL",
+          "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list",
+        ]
       interval: 5s
       retries: 40
   elasticsearch:
@@ -37,7 +41,11 @@ services:
       ES_JAVA_OPTS: -Xms512m -Xmx512m
     volumes: ["elastic_data:/usr/share/elasticsearch/data"]
     healthcheck:
-      test: ["CMD-SHELL", "curl -fs http://localhost:9200/_cluster/health?wait_for_status=yellow"]
+      test:
+        [
+          "CMD-SHELL",
+          "curl -fs http://localhost:9200/_cluster/health?wait_for_status=yellow",
+        ]
       interval: 5s
       retries: 50
   mock-payment-api:
@@ -47,7 +55,7 @@ services:
     ports: ["127.0.0.1:8090:8090"]
     volumes: ["provider_data:/data"]
   billing-service:
-    build: {context: ., args: {SERVICE: billing-service}}
+    build: { context: ., args: { SERVICE: billing-service } }
     environment:
       API_KEY: ${API_KEY:?Run node tests/setup.mjs}
       DATABASE_URL: jdbc:postgresql://postgres:5432/hosting?currentSchema=billing
@@ -56,14 +64,14 @@ services:
       BILLING_MONTHLY_CRON: ${BILLING_MONTHLY_CRON:-0 0 0 1 * *}
     ports: ["127.0.0.1:8081:8080"]
     depends_on:
-      postgres: {condition: service_healthy}
-      kafka: {condition: service_healthy}
+      postgres: { condition: service_healthy }
+      kafka: { condition: service_healthy }
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 5s
       retries: 40
   payment-service:
-    build: {context: ., args: {SERVICE: payment-service}}
+    build: { context: ., args: { SERVICE: payment-service } }
     environment:
       API_KEY: ${API_KEY}
       DATABASE_URL: jdbc:postgresql://postgres:5432/hosting?currentSchema=payments
@@ -72,22 +80,22 @@ services:
       PAYMENT_PROVIDER_URL: http://mock-payment-api:8090
     ports: ["127.0.0.1:8082:8080"]
     depends_on:
-      postgres: {condition: service_healthy}
-      kafka: {condition: service_healthy}
+      postgres: { condition: service_healthy }
+      kafka: { condition: service_healthy }
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 5s
       retries: 40
   audit-search-service:
-    build: {context: ., args: {SERVICE: audit-search-service}}
+    build: { context: ., args: { SERVICE: audit-search-service } }
     environment:
       API_KEY: ${API_KEY}
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       ELASTICSEARCH_URL: http://elasticsearch:9200
     ports: ["127.0.0.1:8083:8080"]
     depends_on:
-      kafka: {condition: service_healthy}
-      elasticsearch: {condition: service_healthy}
+      kafka: { condition: service_healthy }
+      elasticsearch: { condition: service_healthy }
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 5s

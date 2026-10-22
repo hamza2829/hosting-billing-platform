@@ -2,6 +2,7 @@
 import json
 import sqlite3
 import threading
+import time
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -28,7 +29,27 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         global mode
         try:
-            body = json.loads(self.rfile.read(int(self.headers.get('Content-Length', 0))))
+            if self.headers.get('Transfer-Encoding', '').lower() == 'chunked':
+                chunks = []
+                total = 0
+                while True:
+                    size = int(self.rfile.readline().split(b';')[0], 16)
+                    if size == 0:
+                        while self.rfile.readline().strip():
+                            pass
+                        break
+                    total += size
+                    if total > 16384:
+                        raise ValueError('Body too large')
+                    chunks.append(self.rfile.read(size))
+                    self.rfile.read(2)
+                raw = b''.join(chunks)
+            else:
+                length = int(self.headers.get('Content-Length', 0))
+                if length > 16384:
+                    raise ValueError('Body too large')
+                raw = self.rfile.read(length)
+            body = json.loads(raw)
         except (ValueError, TypeError):
             self.send(400, {'error': 'Invalid JSON'})
             return
@@ -43,7 +64,7 @@ class Handler(BaseHTTPRequestHandler):
             key = self.headers.get('Idempotency-Key')
             if not key or body.get('amountMinor', 0) <= 0:
                 return self.send(400, {'error': 'Invalid charge'})
-            attempts.append({'key': key, 'correlationId': self.headers.get('X-Correlation-ID'), 'mode': mode})
+            attempts.append({'key': key, 'correlationId': self.headers.get('X-Correlation-ID'), 'mode': mode, 'timeMs': int(time.time()*1000)})
             previous = db.execute('SELECT payload,reference FROM charges WHERE key=?', (key,)).fetchone()
             serialized = json.dumps(body, sort_keys=True)
             if previous:
