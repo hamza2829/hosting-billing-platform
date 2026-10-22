@@ -14,6 +14,7 @@ jobs:
         with: { node-version: "22" }
       - run: node tests/setup.mjs
       - run: mvn -B -ntp spotless:check verify
+      - run: python3 -m unittest discover -s tests -p 'test_*.py' -v
       - run: docker compose up -d --build --wait --wait-timeout 240
       - run: node tests/smoke.mjs
       - name: Capture runtime evidence

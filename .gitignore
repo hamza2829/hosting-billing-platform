@@ -4,3 +4,4 @@ docs/runs/local-*
 .idea/
 *.log
 .tools/
+**/__pycache__/

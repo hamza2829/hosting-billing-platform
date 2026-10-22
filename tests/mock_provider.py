@@ -1,5 +1,6 @@
 """Local Stripe-style test double. Never contacts a payment network."""
 import json
+import os
 import sqlite3
 import threading
 import time
@@ -7,7 +8,7 @@ import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 lock = threading.Lock()
-db = sqlite3.connect('/data/provider.db', check_same_thread=False)
+db = sqlite3.connect(os.getenv('PROVIDER_DB', '/data/provider.db'), check_same_thread=False)
 db.execute('CREATE TABLE IF NOT EXISTS charges(key TEXT PRIMARY KEY, payload TEXT, reference TEXT)')
 mode = 'success'
 attempts = []
@@ -34,6 +35,8 @@ class Handler(BaseHTTPRequestHandler):
                 total = 0
                 while True:
                     size = int(self.rfile.readline().split(b';')[0], 16)
+                    if size < 0:
+                        raise ValueError('Invalid chunk size')
                     if size == 0:
                         while self.rfile.readline().strip():
                             pass
@@ -83,4 +86,5 @@ class Handler(BaseHTTPRequestHandler):
             return self.send(201, {'id': reference})
 
 
-ThreadingHTTPServer(('0.0.0.0', 8090), Handler).serve_forever()
+if __name__ == '__main__':
+    ThreadingHTTPServer(('0.0.0.0', 8090), Handler).serve_forever()
